@@ -1,6 +1,6 @@
 $(document).ready(function(){
     'use strict';
-    let range = {
+    const range = {
         distance: 0,
         delta: function(diff) {
             return () => {
@@ -11,9 +11,26 @@ $(document).ready(function(){
         },
     };
 
-    range.delta(10)();
+    const battery = {
+        energy: 0,
+        max: 100,
+        delta: function(diff) {
+            return () => {
+                this.energy += diff;
+                $("#battery")
+                    .css("width", (this.energy * 100 / this.max) + "%")
+                    .html(this.energy)
+                    .attr("aria-valuenow", this.energy);
+            }
+        },
+    };
 
-    $("#doit").click(range.delta(3));
+    range.delta(10)();
+    battery.delta(10)();
+
     $("#near").click(range.delta(-1));
     $("#far").click(range.delta(1));
+
+    $("#add").click(battery.delta(1));
+    $("#sub").click(battery.delta(-1));
 });
