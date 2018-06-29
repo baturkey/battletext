@@ -25,12 +25,54 @@
             </div>
             <div class="row h-75 bg-dark">
                 <div class="col-sm-8 bg-light">
-                    <h2>Fast Weapons</h2>
+                    <h2>Weapons</h2>
                     <ul class="list-group">
-                        <li class="list-group-item">Omegaton Missile</li>
-                        <li class="list-group-item">Rivetripper Sword</li>
+                        <li class="list-group-item d-flex">
+                            <h3 class="flex-fill">Omegaton Missile</h3>
+                            <div class="btn-group btn-group-toggle flex-fill" data-toggle="buttons">
+                                <label class="btn btn-secondary active" data-toggle="tooltip" title="asdf">
+                                    <input type="radio" name="weapon_1" id="weapon1_1" data-energy="0" value="one" autocomplete="off" checked> Do not fire
+                                </label>
+                                <label class="btn btn-secondary">
+                                    <input type="radio" name="weapon_1" id="weapon1_2" data-energy="2" value="two" autocomplete="off"> Range 3
+                                </label>
+                                <label class="btn btn-secondary">
+                                    <input type="radio" name="weapon_1" id="weapon1_3" data-energy="5" value="three" autocomplete="off"> Range 4
+                                </label>
+                            </div>
+                        </li>
+                        <li class="list-group-item d-flex">
+                            <h3 class="flex-fill">Rivetripper Sword</h3>
+                            <div class="btn-group btn-group-toggle flex-fill" data-toggle="buttons">
+                                <label class="btn btn-secondary active">
+                                    <input type="radio" name="weapon_2" id="weapon2_1" data-energy="0" autocomplete="off" checked> Do not fire
+                                </label>
+                                <label class="btn btn-secondary">
+                                    <input type="radio" name="weapon_2" id="weapon2_2" data-energy="3" autocomplete="off"> Range 0
+                                </label>
+                                <label class="btn btn-secondary">
+                                    <input type="radio" name="weapon_2" id="weapon2_3" data-energy="4" autocomplete="off"> Range 1
+                                </label>
+                            </div>
+                        </li>
                         <li class="list-group-item">Jiggywatt Laser</li>
                         <li class="list-group-item">Massive Armor Plating</li>
+                    </ul>
+                    <h2>Movement</h2>
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                <label class="btn btn-secondary">
+                                    <input type="radio" name="movement" id="movement_1"> Back 1
+                                </label>
+                                <label class="btn btn-secondary active">
+                                    <input type="radio" name="movement" id="movement_1"> Do not move
+                                </label>
+                                <label class="btn btn-secondary">
+                                    <input type="radio" name="movement" id="movement_1"> Forward 1
+                                </label>
+                            </div>
+                        </li>
                     </ul>
                 </div>
                 <div class="col-sm-4 align-self-center">
@@ -47,16 +89,12 @@
                             <button id="doit" class="btn btn-primary">Engage</button>
                         </li>
                         <li class="flex-fill navbar-text text-light">
-                            <button id="far" class="btn btn-success">+1</button>
                             <b>&gt;Range: <span id="range">10</span>&lt;</b>
-                            <button id="near" class="btn btn-success">-1</button>
                         </li>
                         <li class="flex-fill navbar-text">
-                            <button id="sub">-1</button>
                             <div class="progress">
                                 <div id="battery" class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
                             </div>
-                            <button id="add">+1</button>
                         </li>
                     </ul>
                 </nav>
