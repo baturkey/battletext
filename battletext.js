@@ -29,6 +29,35 @@ $(document).ready(function(){
 
     let weaponSettings = {};
 
+    let weapons = [
+        {
+            name: 'Omegaton Missile',
+            opts: [
+                {
+                    range: 4,
+                    energy: 1,
+                },
+                {
+                    range: 5,
+                    energy: 2,
+                },
+            ],
+        },
+        {
+            name: 'Rivetripper Sword',
+            opts: [
+                {
+                    range: 0,
+                    energy: 1,
+                },
+                {
+                    range: 1,
+                    energy: 2,
+                },
+            ],
+        },
+    ];
+
     $("input[type=radio]:checked").each(function() {
         weaponSettings[$(this).attr("name")] = $(this).data("energy");
     });
