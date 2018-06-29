@@ -4,7 +4,10 @@ $(document).ready(function(){
         distance: 0,
         delta: function(diff) {
             return () => {
-                this.distance += diff;
+                if (-diff > this.distance) {
+                    $("#enemy").css("transition", "2s").css("transform", "rotateY(180deg)");
+                }
+                this.distance = Math.abs(this.distance + diff);
                 $("#range").html(this.distance);
                 $("#enemy").css("fontSize", (-this.distance / 4 + 5) + "rem");
             };
