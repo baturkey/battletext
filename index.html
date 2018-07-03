@@ -26,40 +26,9 @@
             <div class="row h-75 bg-dark">
                 <div class="col-sm-8 bg-light">
                     <h2>Weapons</h2>
-                    <ul id="weapons" class="list-group">
-                        <li class="list-group-item d-flex">
-                            <h3 class="flex-fill">Omegaton Missile</h3>
-                            <div class="btn-group btn-group-toggle flex-fill" data-toggle="buttons">
-                                <label class="btn btn-secondary active" data-toggle="tooltip" title="asdf">
-                                    <input type="radio" name="weapon_1" id="weapon1_1" data-energy="0" value="one" autocomplete="off" checked> Do not fire
-                                </label>
-                                <label class="btn btn-secondary">
-                                    <input type="radio" name="weapon_1" id="weapon1_2" data-energy="2" value="two" autocomplete="off"> Range 3
-                                </label>
-                                <label class="btn btn-secondary">
-                                    <input type="radio" name="weapon_1" id="weapon1_3" data-energy="5" value="three" autocomplete="off"> Range 4
-                                </label>
-                            </div>
-                        </li>
-                        <li class="list-group-item d-flex">
-                            <h3 class="flex-fill">Rivetripper Sword</h3>
-                            <div class="btn-group btn-group-toggle flex-fill" data-toggle="buttons">
-                                <label class="btn btn-secondary active">
-                                    <input type="radio" name="weapon_2" id="weapon2_1" data-energy="0" autocomplete="off" checked> Do not fire
-                                </label>
-                                <label class="btn btn-secondary">
-                                    <input type="radio" name="weapon_2" id="weapon2_2" data-energy="3" autocomplete="off"> Range 0
-                                </label>
-                                <label class="btn btn-secondary">
-                                    <input type="radio" name="weapon_2" id="weapon2_3" data-energy="4" autocomplete="off"> Range 1
-                                </label>
-                            </div>
-                        </li>
-                        <li class="list-group-item">Jiggywatt Laser</li>
-                        <li class="list-group-item">Massive Armor Plating</li>
-                    </ul>
+                    <ul id="weaponList" class="list-group"></ul>
                     <h2>Movement</h2>
-                    <ul class="list-group">
+                    <ul id="movementList" class="list-group">
                         <li class="list-group-item">
                             <div class="btn-group btn-group-toggle" data-toggle="buttons">
                                 <label class="btn btn-secondary">
@@ -74,11 +43,13 @@
                             </div>
                         </li>
                     </ul>
+                    <h2>Equipment</h2>
+                    <ul id="equipmentList" class="list-group"></ul>
                 </div>
                 <div class="col-sm-4 align-self-center">
                     <pre id="enemy" class="text-center text-light">   O   
 }=HHH={
-  IHI  
+  IVI  
   I I  </pre>
                 </div>
             </div>
