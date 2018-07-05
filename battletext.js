@@ -49,11 +49,41 @@ $(document).ready(function(){
                     id: 1,
                     range: 4,
                     energy: 1,
+                    fast: false,
+                    effect: [
+                        {
+                            range: 3,
+                            dmg: 1,
+                        },
+                        {
+                            range: 4,
+                            dmg: 3,
+                        },
+                        {
+                            range: 5,
+                            dmg: 1,
+                        },
+                    ],
                 },
                 {
                     id: 2,
                     range: 5,
                     energy: 2,
+                    fast: false,
+                    effect: [
+                        {
+                            range: 4,
+                            dmg: 1,
+                        },
+                        {
+                            range: 5,
+                            dmg: 3,
+                        },
+                        {
+                            range: 6,
+                            dmg: 1,
+                        },
+                    ],
                 },
             ],
             dmg: 0,
@@ -67,11 +97,25 @@ $(document).ready(function(){
                     id: 1,
                     range: 0,
                     energy: 1,
+                    fast: true,
+                    effect: [
+                        {
+                            range: 0,
+                            dmg: 1,
+                        },
+                    ],
                 },
                 {
                     id: 2,
                     range: 1,
                     energy: 2,
+                    fast: false,
+                    effect: [
+                        {
+                            range: 1,
+                            dmg: 1,
+                        },
+                    ],
                 },
             ],
             dmg: 1,
@@ -85,11 +129,25 @@ $(document).ready(function(){
                     id: 1,
                     range: 3,
                     energy: 2,
+                    fast: true,
+                    effect: [
+                        {
+                            range: 3,
+                            dmg: 1,
+                        },
+                    ],
                 },
                 {
                     id: 2,
                     range: 4,
                     energy: 3,
+                    fast: true,
+                    effect: [
+                        {
+                            range: 4,
+                            dmg: 1,
+                        },
+                    ],
                 },
             ],
             dmg: 2,
@@ -130,6 +188,20 @@ $(document).ready(function(){
         },
     ];
 
+    function datify(opt) {
+        let output = [];
+        for (let key of Object.keys(opt)) {
+            if (key == "effect") {
+                for (let dmg of opt[key]) {
+                    output.push("data-dmg-" + dmg.range + "=" + dmg.dmg);
+                }
+            } else {
+                output.push("data-" + key + "='" + opt[key] + "'");
+            }
+        }
+        return output.join(" ");
+    }
+
     const types = player.reduce((acc, cur) => {
         if (!acc.includes(cur.type)) {
             acc.push(cur.type);
@@ -141,35 +213,58 @@ $(document).ready(function(){
         $("#loadout").append("<h2>" + type[0].toUpperCase() + type.substr(1) + "</h2><ul id='" + type + "List' class='list-group'></ul>");
     }
 
-    const dmgMap = ['success', 'warning', 'danger'];
+    function redraw() {
+        const dmgMap = ['success', 'warning', 'danger'];
 
-    for (let x of player) {
-        let list = "<li class='list-group-item d-flex'><h3 class='flex-fill text-" + dmgMap[x.dmg] + "'>" + x.name + "</h3><div class='btn-group btn-group-toggle flex-fill' data-toggle='buttons'>";
-        list += "<label class='btn btn-secondary active'><input type='radio' name='weapon_" + x.id + "' id='weapon'" + x.id + "_0' data-energy='0' checked> Hold</label>";
-        for (let opt of x.opts) {
-            list += "<label class='btn btn-secondary'><input type='radio' name='weapon_" + x.id + "' id='weapon'" + x.id + "_" + opt.id + "' data-energy='" + opt.energy + "'> " + opt.range + "</label>";
+        for (let type of types) {
+            $("#" + type + "List").html('');
         }
-        list += "</div></li>";
-        $("#" + x.type + "List").append(list);
+
+        for (let x of player) {
+            let list = "<li class='list-group-item d-flex'><h3 class='flex-fill text-" + dmgMap[x.dmg] + "'>" + x.name + "</h3><div class='btn-group btn-group-toggle flex-fill' data-toggle='buttons'>";
+            list += "<label class='btn btn-secondary active'><input type='radio' name='" + x.type + "_" + x.id + "' id='" + x.type + "'" + x.id + "_0' data-energy='0' checked> Hold</label>";
+            for (let opt of x.opts) {
+                list += "<label class='btn btn-secondary'><input type='radio' name='" + x.type + "_" + x.id + "' id='" + x.type + "'" + x.id + "_" + opt.id + "' " + datify(opt) + "'> " + opt.range + "</label>";
+            }
+            list += "</div></li>";
+            $("#" + x.type + "List").append(list);
+        }
+
+        $("input[type=radio]:checked").each(function() {
+            weaponSettings[$(this).attr("name")] = $(this).data("energy");
+        });
+
+        $("input[type=radio]").change(function() {
+            battery.delta(weaponSettings[$(this).attr("name")] - $(this).data("energy"));
+            weaponSettings[$(this).attr("name")] = $(this).data("energy");
+        });
     }
 
-    $("input[type=radio]:checked").each(function() {
-        weaponSettings[$(this).attr("name")] = $(this).data("energy");
-    });
-
-    $("input[type=radio]").change(function(e) {
-        battery.delta(weaponSettings[$(this).attr("name")] - $(this).data("energy"));
-        weaponSettings[$(this).attr("name")] = $(this).data("energy");
-    });
+    redraw();
 
     range.delta(10);
     battery.delta(10);
 
     $("#doit").click(function() {
+        const diff = Math.floor(Math.random() * 4) - 3;
+        const newdistance = range.distance + diff;
+
         $("input[type=radio]:checked").each(function() {
-            console.log(this);
+            if($(this).attr('name').substr(0, 7) == "weapons") {
+                console.log(this);
+                if ($(this).data("fast") && $(this).data("dmg-" + range.distance)) {
+                    console.log("fast hit");
+                } else if(!$(this).data("fast") && $(this).data("dmg-" + newdistance)) {
+                    console.log("slow hit");
+                } else {
+                    console.log("miss");
+                }
+            }
         });
 
-        range.delta(Math.floor(Math.random() * 4) - 3);
+        range.delta(diff);
+        battery.delta(5);
+
+        redraw();
     });
 });
