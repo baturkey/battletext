@@ -18,12 +18,12 @@
     </head>
     <body class="bg-white">
         <div class="container">
-            <div class="row">
+            <div class="row shadow">
                 <nav class="navbar navbar-dark bg-primary w-100">
                     <h1 class="text-light">BattleText</h1>
                 </nav>
             </div>
-            <div class="row h-75 bg-dark">
+            <div class="row h-75 bg-dark shadow">
                 <div class="col-sm-8 bg-light">
                     <h2>Weapons</h2>
                     <ul id="weaponList" class="list-group"></ul>
@@ -40,6 +40,9 @@
                                 <label class="btn btn-secondary">
                                     <input type="radio" name="movement" id="movement_1"> Forward 1
                                 </label>
+                                <label class="btn btn-secondary text-muted">
+                                    <input type="radio" name="movement" id="movement_1" disabled> Forward 2
+                                </label>
                             </div>
                         </li>
                     </ul>
@@ -53,7 +56,7 @@
   I I  </pre>
                 </div>
             </div>
-            <div class="row">
+            <div class="row shadow">
                 <nav class="navbar navbar-dark bg-secondary navbar-expand-lg w-100">
                     <ul id="statusBar" class="navbar-nav w-100">
                         <li class="flex-fill">

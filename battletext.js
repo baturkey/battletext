@@ -24,12 +24,15 @@ $(document).ready(function(){
                 .css("width", (this.energy * 100 / this.max) + "%")
                 .html(this.energy)
                 .attr("aria-valuenow", this.energy);
+
+            $("input[type=radio]").each(function() {
+            });
         },
     };
 
     let weaponSettings = {};
 
-    let weapons = [
+    let playerWeapons = [
         {
             id: 0,
             name: 'Omegaton Missile',
@@ -100,8 +103,8 @@ $(document).ready(function(){
         $("#weaponList").html(list);
     }
 
-    populateWeaponList(weapons);
-    
+    populateWeaponList(playerWeapons);
+
     $("input[type=radio]:checked").each(function() {
         weaponSettings[$(this).attr("name")] = $(this).data("energy");
     });
