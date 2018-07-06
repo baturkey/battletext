@@ -37,7 +37,7 @@ $(document).ready(function(){
         },
     };
 
-    let weaponSettings = {};
+    const weaponSettings = {};
 
     let player = [
         {
@@ -188,6 +188,41 @@ $(document).ready(function(){
         },
     ];
 
+    let enemy = [
+        {
+            id: 0,
+            name: 'Left Hand',
+            dmg: 0,
+        },
+        {
+            id: 1,
+            name: 'Right Hand',
+            dmg: 0,
+        },
+        {
+            id: 2,
+            name: 'Gripping Hand',
+            dmg: 1,
+        },
+        {
+            id: 3,
+            name: 'Poking Hand',
+            dmg: 2,
+        },
+    ];
+
+    const types = player.reduce((acc, cur) => {
+        if (!acc.includes(cur.type)) {
+            acc.push(cur.type);
+        }
+        return acc;
+    }, []);
+
+    function addDmg(list) {
+        list[Math.floor(Math.random() * list.length)].dmg++;
+        return list.filter(l => l.dmg < 3);
+    }
+
     function datify(opt) {
         let output = [];
         for (let key of Object.keys(opt)) {
@@ -200,17 +235,6 @@ $(document).ready(function(){
             }
         }
         return output.join(" ");
-    }
-
-    const types = player.reduce((acc, cur) => {
-        if (!acc.includes(cur.type)) {
-            acc.push(cur.type);
-        }
-        return acc;
-    }, []);
-
-    for (let type of types) {
-        $("#loadout").append("<h2>" + type[0].toUpperCase() + type.substr(1) + "</h2><ul id='" + type + "List' class='list-group'></ul>");
     }
 
     function redraw() {
@@ -230,6 +254,11 @@ $(document).ready(function(){
             $("#" + x.type + "List").append(list);
         }
 
+        $("#enemyList").html("");
+        for (let e of enemy) {
+            $("#enemyList").append("<li class='list-group-item text-" + dmgMap[e.dmg] + "'>" + e.name + "</li>");
+        }
+
         $("input[type=radio]:checked").each(function() {
             weaponSettings[$(this).attr("name")] = $(this).data("energy");
         });
@@ -239,11 +268,6 @@ $(document).ready(function(){
             weaponSettings[$(this).attr("name")] = $(this).data("energy");
         });
     }
-
-    redraw();
-
-    range.delta(10);
-    battery.delta(10);
 
     $("#doit").click(function() {
         const diff = Math.floor(Math.random() * 4) - 3;
@@ -262,9 +286,24 @@ $(document).ready(function(){
             }
         });
 
+        enemy = addDmg(enemy);
+        if (enemy.length == 0) {
+            alert('hooray');
+        }
+            
+        
         range.delta(diff);
         battery.delta(5);
 
         redraw();
     });
+
+    for (let type of types) {
+        $("#loadout").append("<h2>" + type[0].toUpperCase() + type.substr(1) + "</h2><ul id='" + type + "List' class='list-group'></ul>");
+    }
+
+    redraw();
+
+    range.delta(10);
+    battery.delta(10);
 });
