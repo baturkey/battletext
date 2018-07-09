@@ -1,8 +1,7 @@
 $(document).ready(function(){
     'use strict';
 
-    $('[data-toggle="tooltip"]').tooltip();
-
+    /** Tracks distance between player and enemy */
     const range = {
         distance: 0,
         delta: function(diff) {
@@ -11,10 +10,11 @@ $(document).ready(function(){
             }
             this.distance = Math.abs(this.distance + diff);
             $("#range").html(this.distance);
-            $("#enemy").css("fontSize", (-this.distance / 4 + 5) + "rem");
+            $("#enemy").css("fontSize", (-this.distance / 5 + 4) + "rem");
         },
     };
 
+    /** Tracks player's battery power */
     const battery = {
         energy: 0,
         max: 100,
@@ -39,184 +39,270 @@ $(document).ready(function(){
 
     const weaponSettings = {};
 
-    let player = [
-        {
-            id: 0,
-            name: 'Omegaton Missile',
-            type: 'weapons',
-            opts: [
-                {
-                    id: 1,
-                    range: 4,
-                    energy: 1,
-                    fast: false,
-                    effect: [
-                        {
-                            range: 3,
-                            dmg: 1,
-                        },
-                        {
-                            range: 4,
-                            dmg: 3,
-                        },
-                        {
-                            range: 5,
-                            dmg: 1,
-                        },
-                    ],
-                },
-                {
-                    id: 2,
-                    range: 5,
-                    energy: 2,
-                    fast: false,
-                    effect: [
-                        {
-                            range: 4,
-                            dmg: 1,
-                        },
-                        {
-                            range: 5,
-                            dmg: 3,
-                        },
-                        {
-                            range: 6,
-                            dmg: 1,
-                        },
-                    ],
-                },
-            ],
-            dmg: 0,
-        },
-        {
-            id: 1,
-            name: 'Rivetripper Sword',
-            type: 'weapons',
-            opts: [
-                {
-                    id: 1,
-                    range: 0,
-                    energy: 1,
-                    fast: true,
-                    effect: [
-                        {
-                            range: 0,
-                            dmg: 1,
-                        },
-                    ],
-                },
-                {
-                    id: 2,
-                    range: 1,
-                    energy: 2,
-                    fast: false,
-                    effect: [
-                        {
-                            range: 1,
-                            dmg: 1,
-                        },
-                    ],
-                },
-            ],
-            dmg: 1,
-        },
-        {
-            id: 2,
-            name: 'Jigglywatt Laser',
-            type: 'weapons',
-            opts: [
-                {
-                    id: 1,
-                    range: 3,
-                    energy: 2,
-                    fast: true,
-                    effect: [
-                        {
-                            range: 3,
-                            dmg: 1,
-                        },
-                    ],
-                },
-                {
-                    id: 2,
-                    range: 4,
-                    energy: 3,
-                    fast: true,
-                    effect: [
-                        {
-                            range: 4,
-                            dmg: 1,
-                        },
-                    ],
-                },
-            ],
-            dmg: 2,
-        },
-        {
-            id: 3,
-            name: 'Walking',
-            type: 'movement',
-            opts: [
-                {
-                    id: 1,
-                    range: -1,
-                    energy: 0,
-                },
-                {
-                    id: 2,
-                    range: 1,
-                    energy: 0,
-                },
-                {
-                    id: 3,
-                    range: 2,
-                    energy: 2,
-                },
-            ]
-        },
-        {
-            id: 4,
-            name: 'Chaff',
-            type: 'equipment',
-            opts: [
-                {
-                    id: 1,
-                    range: 0,
-                    energy: 0,
-                }
-            ]
-        },
-    ];
+    const player = {
+        equipment: [
+            {
+                id: 0,
+                name: 'Omegaton Missile',
+                opts: [
+                    {
+                        id: 1,
+                        range: 4,
+                        energy: 0,
+                        fast: false,
+                        effect: [
+                            {
+                                range: 3,
+                                dmg: 1,
+                            },
+                            {
+                                range: 4,
+                                dmg: 3,
+                            },
+                            {
+                                range: 5,
+                                dmg: 1,
+                            },
+                        ],
+                    },
+                    {
+                        id: 2,
+                        range: 5,
+                        energy: 0,
+                        fast: false,
+                        effect: [
+                            {
+                                range: 4,
+                                dmg: 1,
+                            },
+                            {
+                                range: 5,
+                                dmg: 3,
+                            },
+                            {
+                                range: 6,
+                                dmg: 1,
+                            },
+                        ],
+                    },
+                    {
+                        id: 3,
+                        range: 6,
+                        energy: 0,
+                        fast: false,
+                        effect: [
+                            {
+                                range: 5,
+                                dmg: 1,
+                            },
+                            {
+                                range: 6,
+                                dmg: 3,
+                            },
+                            {
+                                range: 7,
+                                dmg: 1,
+                            },
+                        ],
+                    },
+                ],
+                ammo: 5,
+                dmg: 0,
+            },
+            {
+                id: 1,
+                name: 'Rivetripper Sword',
+                opts: [
+                    {
+                        id: 1,
+                        range: 0,
+                        energy: 1,
+                        fast: true,
+                        effect: [
+                            {
+                                range: 0,
+                                dmg: 1,
+                            },
+                        ],
+                    },
+                    {
+                        id: 2,
+                        range: 1,
+                        energy: 2,
+                        fast: false,
+                        effect: [
+                            {
+                                range: 1,
+                                dmg: 1,
+                            },
+                        ],
+                    },
+                ],
+                dmg: 0,
+            },
+            {
+                id: 2,
+                name: 'Jigglywatt Laser',
+                opts: [
+                    {
+                        id: 1,
+                        range: 1,
+                        energy: 1,
+                        fast: true,
+                        effect: [
+                            {
+                                range: 1,
+                                dmg: 1,
+                            },
+                        ],
+                    },
+                    {
+                        id: 2,
+                        range: 2,
+                        energy: 1,
+                        fast: true,
+                        effect: [
+                            {
+                                range: 2,
+                                dmg: 1,
+                            },
+                        ],
+                    },
+                    {
+                        id: 3,
+                        range: 3,
+                        energy: 2,
+                        fast: true,
+                        effect: [
+                            {
+                                range: 3,
+                                dmg: 1,
+                            },
+                        ],
+                    },
+                    {
+                        id: 4,
+                        range: 4,
+                        energy: 3,
+                        fast: true,
+                        effect: [
+                            {
+                                range: 4,
+                                dmg: 1,
+                            },
+                        ],
+                    },
+                    {
+                        id: 5,
+                        range: 5,
+                        energy: 5,
+                        fast: true,
+                        effect: [
+                            {
+                                range: 5,
+                                dmg: 1,
+                            },
+                        ],
+                    },
+                    {
+                        id: 6,
+                        range: 6,
+                        energy: 8,
+                        fast: true,
+                        effect: [
+                            {
+                                range: 6,
+                                dmg: 1,
+                            },
+                        ],
+                    },
+                    {
+                        id: 7,
+                        range: 7,
+                        energy: 13,
+                        fast: true,
+                        effect: [
+                            {
+                                range: 7,
+                                dmg: 1,
+                            },
+                        ],
+                    },
+                ],
+                dmg: 0,
+            },
+            {
+                id: 4,
+                name: 'Massive Armor Plating',
+                dmg: 0,
+            },
+            {
+                id: 5,
+                name: 'Massive Armor Plating',
+                dmg: 0,
+            },
+        ],
+        movement: [
+            {
+                id: 3,
+                name: 'Walking',
+                opts: [
+                    {
+                        id: 1,
+                        range: -1,
+                        energy: 0,
+                    },
+                    {
+                        id: 2,
+                        range: 1,
+                        energy: 0,
+                    },
+                    {
+                        id: 3,
+                        range: 2,
+                        energy: 2,
+                    },
+                ]
+            },
+        ],
+    };
 
-    let enemy = [
-        {
-            id: 0,
-            name: 'Left Hand',
-            dmg: 0,
-        },
-        {
-            id: 1,
-            name: 'Right Hand',
-            dmg: 0,
-        },
-        {
-            id: 2,
-            name: 'Gripping Hand',
-            dmg: 1,
-        },
-        {
-            id: 3,
-            name: 'Poking Hand',
-            dmg: 2,
-        },
-    ];
-
-    const types = player.reduce((acc, cur) => {
-        if (!acc.includes(cur.type)) {
-            acc.push(cur.type);
-        }
-        return acc;
-    }, []);
+    const enemy = {
+        name: "PUNCH-BOT",
+        equipment: [
+            {
+                id: 0,
+                name: 'Right Hand',
+                dmg: 0,
+            },
+            {
+                id: 1,
+                name: 'Left Hand',
+                dmg: 0,
+            },
+            {
+                id: 2,
+                name: 'Gripping Hand',
+                dmg: 0,
+            },
+            {
+                id: 3,
+                name: 'Poking Hand',
+                dmg: 0,
+            },
+            {
+                id: 4,
+                name: 'Massive Armor Plating',
+                dmg: 0,
+            }
+        ],
+        limbs: [
+            "}=H",
+            "H={",
+            "}=H",
+            "H={",
+        ],
+    };
 
     function addDmg(list) {
         list[Math.floor(Math.random() * list.length)].dmg++;
@@ -240,23 +326,45 @@ $(document).ready(function(){
     function redraw() {
         const dmgMap = ['success', 'warning', 'danger'];
 
-        for (let type of types) {
+        for (let type of Object.keys(player)) {
             $("#" + type + "List").html('');
+            for (let itemIndex in player[type]) {
+                const item = player[type][itemIndex];
+                let list = "<li class='list-group-item d-flex'><h3 class='flex-fill text-" + dmgMap[item.dmg] + "'>" + item.name;
+                if (typeof item.ammo == 'number') {
+                    list += " <span class='badge badge-pill badge-dark'>" + item.ammo + "</span>";
+                }
+                list += "</h3>";
+
+                if (item.opts && (typeof item.ammo != 'number' || item.ammo > 0)) {
+                    list += "<div class='btn-group btn-group-toggle flex-fill' data-toggle='buttons'>";
+                    list += "<label class='btn btn-secondary active'><input type='radio' name='" + item.type + "_" + item.id + "' id='" + item.type + "'" + item.id + "_0' data-energy='0' checked> Hold</label>";
+                    for (let opt of item.opts) {
+                        if (!opt.fast || opt.range == range.distance) {
+                            list += "<label class='btn btn-secondary'><input type='radio' name='" + item.type + "_" + item.id + "' id='" + item.type + "_" + item.id + "_" + opt.id + "' " + datify(opt) + " data-ammo='" + itemIndex + "'> " + opt.range + "</label>";
+                        }
+                    }
+                    list += "</div>";
+                }
+                list += "</li>";
+                $("#" + type + "List").append(list);
+            }
         }
 
-        for (let x of player) {
-            let list = "<li class='list-group-item d-flex'><h3 class='flex-fill text-" + dmgMap[x.dmg] + "'>" + x.name + "</h3><div class='btn-group btn-group-toggle flex-fill' data-toggle='buttons'>";
-            list += "<label class='btn btn-secondary active'><input type='radio' name='" + x.type + "_" + x.id + "' id='" + x.type + "'" + x.id + "_0' data-energy='0' checked> Hold</label>";
-            for (let opt of x.opts) {
-                list += "<label class='btn btn-secondary'><input type='radio' name='" + x.type + "_" + x.id + "' id='" + x.type + "'" + x.id + "_" + opt.id + "' " + datify(opt) + "'> " + opt.range + "</label>";
-            }
-            list += "</div></li>";
-            $("#" + x.type + "List").append(list);
+        for (let limbno in enemy.limbs) {
+            $("#enemy" + limbno).html("   ");
         }
 
         $("#enemyList").html("");
-        for (let e of enemy) {
-            $("#enemyList").append("<li class='list-group-item text-" + dmgMap[e.dmg] + "'>" + e.name + "</li>");
+        for (let weapon of enemy.equipment) {
+            if (weapon.id < enemy.limbs.length) {
+                $("#enemy" + weapon.id)
+                    .removeClass()
+                    .addClass("d-inline")
+                    .addClass("text-" + dmgMap[weapon.dmg])
+                    .html(enemy.limbs[weapon.id]);
+            }
+            $("#enemyList").append("<li class='list-group-item text-" + dmgMap[weapon.dmg] + "'>" + weapon.name + "</li>");
         }
 
         $("input[type=radio]:checked").each(function() {
@@ -273,34 +381,47 @@ $(document).ready(function(){
         const diff = Math.floor(Math.random() * 4) - 3;
         const newdistance = range.distance + diff;
 
+        /* Player actions */
         $("input[type=radio]:checked").each(function() {
-            if($(this).attr('name').substr(0, 7) == "weapons") {
-                console.log(this);
+            if (typeof $(this).data('ammo') == 'number') {
+                player.equipment[$(this).data('ammo')].ammo--;
+            }
+            if ($(this).attr('name').substr(0, 7) == "weapons") {
                 if ($(this).data("fast") && $(this).data("dmg-" + range.distance)) {
                     console.log("fast hit");
-                } else if(!$(this).data("fast") && $(this).data("dmg-" + newdistance)) {
+                    enemy.equipment = addDmg(enemy.equipment);
+                } else if (!$(this).data("fast") && $(this).data("dmg-" + newdistance)) {
                     console.log("slow hit");
+                    enemy.equipment = addDmg(enemy.equipment);
                 } else {
                     console.log("miss");
                 }
             }
         });
 
-        enemy = addDmg(enemy);
+        /* AI Actions */
+        player.equipment = addDmg(player.equipment);
+
+        /* Check for game end */
         if (enemy.length == 0) {
             alert('hooray');
         }
-            
-        
+
+        /* Begin next turn */
         range.delta(diff);
         battery.delta(5);
 
         redraw();
     });
 
-    for (let type of types) {
+    /* Set up new game */
+    $('[data-toggle="tooltip"]').tooltip();
+
+    for (let type of Object.keys(player)) {
         $("#loadout").append("<h2>" + type[0].toUpperCase() + type.substr(1) + "</h2><ul id='" + type + "List' class='list-group'></ul>");
     }
+
+    $("#enemyName").html(enemy.name);
 
     redraw();
 

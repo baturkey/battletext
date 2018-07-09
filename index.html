@@ -26,16 +26,17 @@
             <div class="row bg-dark shadow">
                 <div class="col-sm-8 bg-light" id="loadout"></div>
                 <div class="col-sm-4 d-flex flex-column">
-                    <div>
-                        <pre id="enemy" class="text-center text-light">   O   
-}=HHH={
-}=HHH={
-  IVI  
-  I I  </pre>
+                    <div id="enemy" class="text-center text-light">
+                        <pre class="d-inline text-light">   O   </pre><br />
+                        <pre id="enemy0"></pre><pre class="d-inline text-light">M</pre><pre id="enemy1"></pre><br />
+                        <pre id="enemy2"></pre><pre class="d-inline text-light">M</pre><pre id="enemy3"></pre><br />
+                        <pre class="d-inline text-light">  IVI  </pre><br />
+                        <pre class="d-inline text-light">  I I  </pre>
                     </div>
                     <div class="row bg-white flex-fill">
                         <div class="col-sm">
-                            <div><b id="enemyName">PUNCH-BOT</b></div>
+                            <div><b id="enemyName"></b></div>
+                            <ul id="enemyList" class="list-group"></ul>
                         </div>
                     </div>
                 </div>
@@ -47,7 +48,7 @@
                             <button id="doit" class="btn btn-primary">Engage</button>
                         </li>
                         <li class="flex-fill navbar-text text-light">
-                            <b>&gt;Range: <span id="range">10</span>&lt;</b>
+                            <b>&gt; Range: <span id="range">10</span> &lt;</b>
                         </li>
                         <li class="flex-fill navbar-text">
                             <div class="progress">
@@ -56,6 +57,25 @@
                         </li>
                     </ul>
                 </nav>
+            </div>
+        </div>
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Game Over</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        You have <span id="result"></span>.
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary">Play Again</button>
+                    </div>
+                </div>
             </div>
         </div>
     </body>
