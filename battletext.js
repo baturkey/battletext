@@ -26,7 +26,7 @@ $(document).ready(function(){
                 .attr("aria-valuenow", this.energy);
 
             $("input[type=radio]").each((_, e) => {
-                if($(e).data('energy') > this.energy) {
+                if($(e).data('energy') && $(e).data('energy') > this.energy) {
                     $(e).attr('disabled', true);
                     $(e).parent().addClass('text-muted');
                 } else {
@@ -244,7 +244,7 @@ $(document).ready(function(){
         ],
         movement: [
             {
-                id: 3,
+                id: 0,
                 name: 'Walking',
                 opts: [
                     {
@@ -323,7 +323,13 @@ $(document).ready(function(){
         return output.join(" ");
     }
 
-    function redraw() {
+    function gameOver(result) {
+        $("#result").html(result);
+        $("#endModal").modal("show");
+    }
+
+    /** Populate the UI */
+    function populate() {
         const dmgMap = ['success', 'warning', 'danger'];
 
         for (let type of Object.keys(player)) {
@@ -338,10 +344,16 @@ $(document).ready(function(){
 
                 if (item.opts && (typeof item.ammo != 'number' || item.ammo > 0)) {
                     list += "<div class='btn-group btn-group-toggle flex-fill' data-toggle='buttons'>";
-                    list += "<label class='btn btn-secondary active'><input type='radio' name='" + item.type + "_" + item.id + "' id='" + item.type + "'" + item.id + "_0' data-energy='0' checked> Hold</label>";
+                    list += "<label class='btn btn-secondary active' data-toggle='tooltip' title='Do not use'><input type='radio' name='" + type + "_" + item.id + "' id='" + type + "_" + item.id + "_0' data-range='0' data-energy='0' checked> Hold</label>";
                     for (let opt of item.opts) {
                         if (!opt.fast || opt.range == range.distance) {
-                            list += "<label class='btn btn-secondary'><input type='radio' name='" + item.type + "_" + item.id + "' id='" + item.type + "_" + item.id + "_" + opt.id + "' " + datify(opt) + " data-ammo='" + itemIndex + "'> " + opt.range + "</label>";
+                            let title = "Speed: " + (opt.fast ? "Fast" : "Slow") + "\n" + "Energy: " + opt.energy;
+                            if (opt.effect) {
+                                for (let e of opt.effect) {
+                                    title += "\nRange " + e.range + ": " + e.dmg + " damage";
+                                }
+                            }
+                            list += "<label class='btn btn-secondary' data-toggle='tooltip' title='" + title + "'><input type='radio' name='" + type + "_" + item.id + "' id='" + type + "_" + item.id + "_" + opt.id + "' " + datify(opt) + (typeof item.ammo == 'number' ? " data-ammo='" + itemIndex + "'" : "") + "> " + opt.range + "</label>";
                         }
                     }
                     list += "</div>";
@@ -378,40 +390,50 @@ $(document).ready(function(){
     }
 
     $("#doit").click(function() {
-        const diff = Math.floor(Math.random() * 4) - 3;
+        const botMovement = -1;
+        const movement = $("input[name=movement_0]:checked")[0];
+        const playerMovement = -$(movement).data("range");
+        const diff = botMovement + playerMovement;
         const newdistance = range.distance + diff;
 
         /* Player actions */
-        $("input[type=radio]:checked").each(function() {
+        $("#equipmentList input[type=radio]:checked").each(function() {
             if (typeof $(this).data('ammo') == 'number') {
                 player.equipment[$(this).data('ammo')].ammo--;
             }
-            if ($(this).attr('name').substr(0, 7) == "weapons") {
-                if ($(this).data("fast") && $(this).data("dmg-" + range.distance)) {
-                    console.log("fast hit");
+            if ($(this).data("fast") && $(this).data("dmg-" + range.distance)) {
+                for (let i = 0; i < $(this).data("dmg-" + range.distance); i++) {
                     enemy.equipment = addDmg(enemy.equipment);
-                } else if (!$(this).data("fast") && $(this).data("dmg-" + newdistance)) {
-                    console.log("slow hit");
+                }
+            } else if (!$(this).data("fast") && $(this).data("dmg-" + newdistance)) {
+                for (let i = 0; i < $(this).data("dmg-" + newdistance); i++) {
                     enemy.equipment = addDmg(enemy.equipment);
-                } else {
-                    console.log("miss");
                 }
             }
         });
 
         /* AI Actions */
-        player.equipment = addDmg(player.equipment);
-
-        /* Check for game end */
-        if (enemy.length == 0) {
-            alert('hooray');
+        if (range.distance < 2) {
+            for (let weapon of enemy.equipment) {
+                if (weapon.id < enemy.limbs.length) {
+                    player.equipment = addDmg(player.equipment);
+                }
+            }
         }
 
-        /* Begin next turn */
-        range.delta(diff);
-        battery.delta(5);
-
-        redraw();
+        /* Check for game end */
+        if (enemy.equipment.length == 0 && player.equipment.length == 0) {
+            gameOver("tied");
+        } else if(enemy.equipment.length == 0) {
+            gameOver("won");
+        } else if(player.equipment.length == 0) {
+            gameOver("lost");
+        } else {
+            /* Begin next turn */
+            range.delta(diff);
+            battery.delta(5);
+            populate();
+        }
     });
 
     /* Set up new game */
@@ -423,8 +445,11 @@ $(document).ready(function(){
 
     $("#enemyName").html(enemy.name);
 
-    redraw();
+    $("#playAgain").click(function() {
+        window.location.reload(false);
+    });
 
     range.delta(10);
     battery.delta(10);
+    populate();
 });

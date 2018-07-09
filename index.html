@@ -23,6 +23,14 @@
                     <h1 class="text-light">BattleText</h1>
                 </nav>
             </div>
+            <div class="row shadow">
+                <div class="col-sm">
+                    Movement is simulatenous. Fast weapons take effect
+                    before movement and slow weapons take effect after
+                    movement. Hover over an option to see weapon speed
+                    and energy usage. You regain 5 energy a turn.
+                </div>
+            </div>
             <div class="row bg-dark shadow">
                 <div class="col-sm-8 bg-light" id="loadout"></div>
                 <div class="col-sm-4 d-flex flex-column">
@@ -60,7 +68,7 @@
             </div>
         </div>
         <!-- Modal -->
-        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal fade" id="endModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -73,7 +81,7 @@
                         You have <span id="result"></span>.
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary">Play Again</button>
+                        <button id="playAgain" type="button" class="btn btn-primary">Play Again</button>
                     </div>
                 </div>
             </div>
