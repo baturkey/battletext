@@ -14,9 +14,10 @@
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"
                 integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T"
                 crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="bootstrap.min.css">
         <script src="battletext.js"></script>
     </head>
-    <body class="bg-white">
+    <body>
         <div class="container">
             <div class="row shadow">
                 <nav class="navbar navbar-dark bg-primary w-100">
@@ -24,24 +25,38 @@
                 </nav>
             </div>
             <div class="row shadow">
-                <div class="col-sm">
-                    Movement is simulatenous. Fast weapons take effect
-                    before movement and slow weapons take effect after
-                    movement. Hover over an option to see weapon speed
-                    and energy usage. You regain 5 energy a turn.
+                <div class="accordion w-100" id="accordionExample">
+                    <div class="card">
+                        <div class="card-header" id="headingOne">
+                            <h5 class="mb-0">
+                                <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                    Click for More Information
+                                </button>
+                            </h5>
+                        </div>
+
+                        <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
+                            <div class="card-body">
+                                Movement is simulatenous. Fast weapons take effect
+                                before movement and slow weapons take effect after
+                                movement. Hover over an option to see weapon speed
+                                and energy usage. You regain 5 energy a turn.
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="row bg-dark shadow">
-                <div class="col-sm-8 bg-light" id="loadout"></div>
+                <div class="col-sm-8" id="loadout"></div>
                 <div class="col-sm-4 d-flex flex-column">
-                    <div id="enemy" class="text-center text-light">
+                    <div id="enemy" class="text-center text-light flex-fill">
                         <pre class="d-inline text-light">   O   </pre><br />
                         <pre id="enemy0"></pre><pre class="d-inline text-light">M</pre><pre id="enemy1"></pre><br />
                         <pre id="enemy2"></pre><pre class="d-inline text-light">M</pre><pre id="enemy3"></pre><br />
                         <pre class="d-inline text-light">  IVI  </pre><br />
                         <pre class="d-inline text-light">  I I  </pre>
                     </div>
-                    <div class="row bg-white flex-fill">
+                    <div class="row flex-fill">
                         <div class="col-sm">
                             <div><b id="enemyName"></b></div>
                             <ul id="enemyList" class="list-group"></ul>

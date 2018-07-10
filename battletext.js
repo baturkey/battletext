@@ -331,12 +331,13 @@ $(document).ready(function(){
     /** Populate the UI */
     function populate() {
         const dmgMap = ['success', 'warning', 'danger'];
+        const dmgAdj = ['', 'Lightly Damaged', 'Heavily Damaged'];
 
         for (let type of Object.keys(player)) {
             $("#" + type + "List").html('');
             for (let itemIndex in player[type]) {
                 const item = player[type][itemIndex];
-                let list = "<li class='list-group-item d-flex'><h3 class='flex-fill text-" + dmgMap[item.dmg] + "'>" + item.name;
+                let list = "<li class='list-group-item d-flex'><h3 class='flex-fill text-" + dmgMap[item.dmg] + "'>" + (typeof item.dmg != "undefined" ? dmgAdj[item.dmg] + " " : "") + item.name;
                 if (typeof item.ammo == 'number') {
                     list += " <span class='badge badge-pill badge-dark'>" + item.ammo + "</span>";
                 }
