@@ -14,25 +14,20 @@
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"
                 integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T"
                 crossorigin="anonymous"></script>
+        <!-- https://bootswatch.com/slate/ -->
         <link rel="stylesheet" href="bootstrap.min.css">
         <script src="battletext.js"></script>
     </head>
     <body>
         <div class="container">
             <div class="row shadow">
-                <nav class="navbar navbar-dark bg-primary w-100">
-                    <h1 class="text-light">BattleText</h1>
-                </nav>
-            </div>
-            <div class="row shadow">
                 <div class="accordion w-100" id="accordionExample">
                     <div class="card">
-                        <div class="card-header" id="headingOne">
-                            <h5 class="mb-0">
-                                <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                    Click for More Information
-                                </button>
-                            </h5>
+                        <div class="card-header bg-primary" id="headingOne">
+                            <h1 class="text-light d-inline align-middle">BattleText</h1>
+                            <button class="btn btn-secondary align-middle float-right" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                Click for More Information
+                            </button>
                         </div>
 
                         <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordionExample">
@@ -57,8 +52,8 @@
                         <pre class="d-inline text-light">  I I  </pre>
                     </div>
                     <div class="row flex-fill">
-                        <div class="col-sm">
-                            <div><b id="enemyName"></b></div>
+                        <div class="col-sm text-center">
+                            <b>Current Target:</b> <b id="enemyName"></b>
                             <ul id="enemyList" class="list-group"></ul>
                         </div>
                     </div>
@@ -68,21 +63,25 @@
                 <nav class="navbar navbar-dark bg-secondary navbar-expand-lg w-100">
                     <ul id="statusBar" class="navbar-nav w-100">
                         <li class="flex-fill">
-                            <button id="doit" class="btn btn-primary">Engage</button>
+                            <button id="doit" class="btn btn-info">Engage</button>
                         </li>
                         <li class="flex-fill navbar-text text-light">
                             <b>&gt; Range: <span id="range">10</span> &lt;</b>
                         </li>
                         <li class="flex-fill navbar-text">
                             <div class="progress">
-                                <div id="battery" class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                <div id="battery" class="progress-bar bg-info" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
                             </div>
                         </li>
                     </ul>
                 </nav>
             </div>
+            <div class="row shadow h-25">
+                <div id="gameLog" class="col-sm bg-light text-dark" style="overflow-y: scroll"></div>
+            </div>
         </div>
-        <!-- Modal -->
+
+        <!-- Game End Modal -->
         <div class="modal fade" id="endModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -101,5 +100,6 @@
                 </div>
             </div>
         </div>
+
     </body>
 </html>

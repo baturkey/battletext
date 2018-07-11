@@ -304,7 +304,12 @@ $(document).ready(function(){
         ],
     };
 
+    let turn = 1;
+
     function addDmg(list) {
+        if (!list.length) {
+            return [];
+        }
         list[Math.floor(Math.random() * list.length)].dmg++;
         return list.filter(l => l.dmg < 3);
     }
@@ -321,6 +326,10 @@ $(document).ready(function(){
             }
         }
         return output.join(" ");
+    }
+
+    function log(s) {
+        $("#gameLog").append(s + "<br />");
     }
 
     function gameOver(result) {
@@ -354,7 +363,7 @@ $(document).ready(function(){
                                     title += "\nRange " + e.range + ": " + e.dmg + " damage";
                                 }
                             }
-                            list += "<label class='btn btn-secondary' data-toggle='tooltip' title='" + title + "'><input type='radio' name='" + type + "_" + item.id + "' id='" + type + "_" + item.id + "_" + opt.id + "' " + datify(opt) + (typeof item.ammo == 'number' ? " data-ammo='" + itemIndex + "'" : "") + "> " + opt.range + "</label>";
+                            list += "<label class='btn btn-info' data-toggle='tooltip' title='" + title + "'><input type='radio' name='" + type + "_" + item.id + "' id='" + type + "_" + item.id + "_" + opt.id + "' " + datify(opt) + (typeof item.ammo == 'number' ? " data-ammo='" + itemIndex + "'" : "") + " data-name='" + item.name + "'> " + opt.range + "</label>";
                         }
                     }
                     list += "</div>";
@@ -388,10 +397,15 @@ $(document).ready(function(){
             battery.delta(weaponSettings[$(this).attr("name")] - $(this).data("energy"));
             weaponSettings[$(this).attr("name")] = $(this).data("energy");
         });
+
+        log ("==Turn " + turn++ + "==");
     }
 
     $("#doit").click(function() {
         const botMovement = -1;
+
+        log (enemy.name + " moves " + (botMovement < 0 ? "closer " : "back ") + Math.abs(botMovement) + " space.");
+
         const movement = $("input[name=movement_0]:checked")[0];
         const playerMovement = -$(movement).data("range");
         const diff = botMovement + playerMovement;
@@ -406,10 +420,12 @@ $(document).ready(function(){
                 for (let i = 0; i < $(this).data("dmg-" + range.distance); i++) {
                     enemy.equipment = addDmg(enemy.equipment);
                 }
+                log("Your " + $(this).data("name") + " hits " + enemy.name + "!");
             } else if (!$(this).data("fast") && $(this).data("dmg-" + newdistance)) {
                 for (let i = 0; i < $(this).data("dmg-" + newdistance); i++) {
                     enemy.equipment = addDmg(enemy.equipment);
                 }
+                log("Your " + $(this).data("name") + " hits " + enemy.name + "!");
             }
         });
 
@@ -417,6 +433,7 @@ $(document).ready(function(){
         if (range.distance < 2) {
             for (let weapon of enemy.equipment) {
                 if (weapon.id < enemy.limbs.length) {
+                    log (enemy.name + " strikes you with " + weapon.name + "!");
                     player.equipment = addDmg(player.equipment);
                 }
             }
