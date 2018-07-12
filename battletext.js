@@ -109,6 +109,7 @@ $(document).ready(function(){
                 ammo: 5,
                 dmg: 0,
             },
+            /*
             {
                 id: 1,
                 name: 'Rivetripper Sword',
@@ -140,6 +141,7 @@ $(document).ready(function(){
                 ],
                 dmg: 0,
             },
+            */
             {
                 id: 2,
                 name: 'Jigglywatt Laser',
@@ -290,11 +292,13 @@ $(document).ready(function(){
                 name: 'Poking Hand',
                 dmg: 0,
             },
+            /*
             {
                 id: 4,
                 name: 'Massive Armor Plating',
                 dmg: 0,
             }
+            */
         ],
         limbs: [
             "}=H",
@@ -337,6 +341,24 @@ $(document).ready(function(){
         $("#endModal").modal("show");
     }
 
+    function printOptions(opts, type, item, itemIndex) {
+        let output = "";
+        for (let opt of opts) {
+            if (!opt.fast || opt.range == range.distance) {
+                let title = "Speed: " + (opt.fast ? "Fast" : "Slow") + "\n" + "Energy: " + opt.energy;
+                if (opt.effect) {
+                    for (let e of opt.effect) {
+                        title += "\nRange " + e.range + ": " + e.dmg + " damage";
+                    }
+                }
+
+                const label = (type == "equipment" ? "Fire at range " : (opt.range < 0 ? "Back " : "Forward ")) + Math.abs(opt.range);
+                output += "<label class='btn btn-info' data-toggle='tooltip' title='" + title + "'><input type='radio' name='" + type + "_" + item.id + "' id='" + type + "_" + item.id + "_" + opt.id + "' " + datify(opt) + (typeof item.ammo == 'number' ? " data-ammo='" + itemIndex + "'" : "") + " data-name='" + item.name + "'> " + label + "</label>";
+            }
+        }
+        return output;
+    }
+
     /** Populate the UI */
     function populate() {
         const dmgMap = ['success', 'warning', 'danger'];
@@ -346,26 +368,17 @@ $(document).ready(function(){
             $("#" + type + "List").html('');
             for (let itemIndex in player[type]) {
                 const item = player[type][itemIndex];
-                let list = "<li class='list-group-item d-flex'><h3 class='flex-fill text-" + dmgMap[item.dmg] + "'>" + (typeof item.dmg != "undefined" ? dmgAdj[item.dmg] + " " : "") + item.name;
+                let list = "<li class='list-group-item d-flex'><b class='flex-fill w-25 text-" + dmgMap[item.dmg] + "'>" + (typeof item.dmg != "undefined" ? dmgAdj[item.dmg] + " " : "") + item.name;
                 if (typeof item.ammo == 'number') {
                     list += " <span class='badge badge-pill badge-dark'>" + item.ammo + "</span>";
                 }
-                list += "</h3>";
+                list += "</b>";
 
                 if (item.opts && (typeof item.ammo != 'number' || item.ammo > 0)) {
-                    list += "<div class='btn-group btn-group-toggle flex-fill' data-toggle='buttons'>";
+                    list += "<div class='btn-group btn-group-toggle flex-fill w-75' data-toggle='buttons'>";
+                    list += printOptions(item.opts.filter(o => o.range < 0), type, item, itemIndex);
                     list += "<label class='btn btn-secondary active' data-toggle='tooltip' title='Do not use'><input type='radio' name='" + type + "_" + item.id + "' id='" + type + "_" + item.id + "_0' data-range='0' data-energy='0' checked> Hold</label>";
-                    for (let opt of item.opts) {
-                        if (!opt.fast || opt.range == range.distance) {
-                            let title = "Speed: " + (opt.fast ? "Fast" : "Slow") + "\n" + "Energy: " + opt.energy;
-                            if (opt.effect) {
-                                for (let e of opt.effect) {
-                                    title += "\nRange " + e.range + ": " + e.dmg + " damage";
-                                }
-                            }
-                            list += "<label class='btn btn-info' data-toggle='tooltip' title='" + title + "'><input type='radio' name='" + type + "_" + item.id + "' id='" + type + "_" + item.id + "_" + opt.id + "' " + datify(opt) + (typeof item.ammo == 'number' ? " data-ammo='" + itemIndex + "'" : "") + " data-name='" + item.name + "'> " + opt.range + "</label>";
-                        }
-                    }
+                    list += printOptions(item.opts.filter(o => o.range > 0), type, item, itemIndex);
                     list += "</div>";
                 }
                 list += "</li>";
@@ -398,18 +411,20 @@ $(document).ready(function(){
             weaponSettings[$(this).attr("name")] = $(this).data("energy");
         });
 
-        log ("==Turn " + turn++ + "==");
+        log ("== Turn " + turn++ + " ==");
     }
 
     $("#doit").click(function() {
         const botMovement = -1;
-
-        log (enemy.name + " moves " + (botMovement < 0 ? "closer " : "back ") + Math.abs(botMovement) + " space.");
-
         const movement = $("input[name=movement_0]:checked")[0];
         const playerMovement = -$(movement).data("range");
         const diff = botMovement + playerMovement;
         const newdistance = range.distance + diff;
+
+        log(enemy.name + " moves " + (botMovement < 0 ? "closer " : "back ") + Math.abs(botMovement) + " space.");
+        if (playerMovement) {
+            log('You move ' + (playerMovement < 0 ? "closer " : " back") + Math.abs(playerMovement) + " space.");
+        }
 
         /* Player actions */
         $("#equipmentList input[type=radio]:checked").each(function() {
@@ -426,6 +441,8 @@ $(document).ready(function(){
                     enemy.equipment = addDmg(enemy.equipment);
                 }
                 log("Your " + $(this).data("name") + " hits " + enemy.name + "!");
+            } else if ($(this).data("name")) {
+                log("Your " + $(this).data("name") + " misses " + enemy.name + "!");
             }
         });
 
@@ -470,4 +487,5 @@ $(document).ready(function(){
     range.delta(10);
     battery.delta(10);
     populate();
+    $("#welcomeModal").modal("show");
 });
