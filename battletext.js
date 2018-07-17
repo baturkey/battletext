@@ -308,6 +308,14 @@ $(document).ready(function(){
         ],
     };
 
+    const instructions = [
+        "You are a robot fighting another robot.",
+        "Your equipment is listed on the left and your enemy's is listed on the right. The game ends when one robot's equipment is destroyed.",
+        "To play, select which weapons you want to fire and how far you want to move. Lasers target the distance between you and the enemy before movement, and missiles target the distance after movement.",
+        "Firing missiles uses up ammunition, displayed to the right of the weapon name",
+        "Firing lasers uses energy, displayed in the bottom right. Lasers have a limited range so you must move closer to fire them. Lasers use less energy as you get closer. You gain 5 energy a turn.",
+    ];
+
     let turn = 1;
 
     function addDmg(list) {
@@ -487,5 +495,8 @@ $(document).ready(function(){
     range.delta(10);
     battery.delta(10);
     populate();
+    $(".instructions").each(function(e) {
+        $(this).html(instructions.map(s => "<p>" + s + "</p>").join("\n"));
+    });
     $("#welcomeModal").modal("show");
 });
