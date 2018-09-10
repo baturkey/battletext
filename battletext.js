@@ -1,3 +1,4 @@
+/* eslint-env jquery */
 $(document).ready(function(){
     'use strict';
 
@@ -306,6 +307,20 @@ $(document).ready(function(){
             "}=H",
             "H={",
         ],
+        getMovement: function() {
+            return -1;
+        },
+        getWeapons: function() {
+            /* AI Actions */
+            if (range.distance < 2) {
+                for (let weapon of this.equipment) {
+                    if (weapon.id < this.limbs.length) {
+                        log (this.name + " strikes you with " + weapon.name + "!");
+                        player.equipment = addDmg(player.equipment);
+                    }
+                }
+            }
+        }
     };
 
     const instructions = [
@@ -342,6 +357,8 @@ $(document).ready(function(){
 
     function log(s) {
         $("#gameLog").append(s + "<br />");
+        var objDiv = document.getElementById("gameLog");
+        objDiv.scrollTop = objDiv.scrollHeight;
     }
 
     function gameOver(result) {
@@ -423,7 +440,7 @@ $(document).ready(function(){
     }
 
     $("#doit").click(function() {
-        const botMovement = -1;
+        const botMovement = enemy.getMovement();
         const movement = $("input[name=movement_0]:checked")[0];
         const playerMovement = -$(movement).data("range");
         const diff = botMovement + playerMovement;
@@ -454,15 +471,7 @@ $(document).ready(function(){
             }
         });
 
-        /* AI Actions */
-        if (range.distance < 2) {
-            for (let weapon of enemy.equipment) {
-                if (weapon.id < enemy.limbs.length) {
-                    log (enemy.name + " strikes you with " + weapon.name + "!");
-                    player.equipment = addDmg(player.equipment);
-                }
-            }
-        }
+        enemy.getWeapons();
 
         /* Check for game end */
         if (enemy.equipment.length == 0 && player.equipment.length == 0) {
