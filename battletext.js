@@ -270,7 +270,60 @@ $(document).ready(function(){
         ],
     };
 
-    const enemy = {
+    const missileBot = {
+        name: "MISSILE-BOT",
+        equipment: [
+            {
+                id: 0,
+                name: 'Right Hand',
+                dmg: 0,
+            },
+            {
+                id: 1,
+                name: 'Left Hand',
+                dmg: 0,
+            },
+            {
+                id: 2,
+                name: 'Gripping Hand',
+                dmg: 0,
+            },
+            {
+                id: 3,
+                name: 'Poking Hand',
+                dmg: 0,
+            },
+            /*
+            {
+                id: 4,
+                name: 'Massive Armor Plating',
+                dmg: 0,
+            }
+            */
+        ],
+        limbs: [
+            "o=H",
+            "H=o",
+            "o=H",
+            "H=o",
+        ],
+        getMovement: function() {
+            return -1;
+        },
+        getWeapons: function() {
+            /* AI Actions */
+            if (range.distance < 2) {
+                for (let weapon of this.equipment) {
+                    if (weapon.id < this.limbs.length) {
+                        log (this.name + " strikes you with " + weapon.name + "!");
+                        player.equipment = addDmg(player.equipment);
+                    }
+                }
+            }
+        }
+    };
+
+    const punchBot = {
         name: "PUNCH-BOT",
         equipment: [
             {
@@ -332,6 +385,7 @@ $(document).ready(function(){
     ];
 
     let turn = 1;
+    let enemy = missileBot;
 
     function addDmg(list) {
         if (!list.length) {
